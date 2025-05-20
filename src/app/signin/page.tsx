@@ -1,4 +1,3 @@
-import { api } from "i/trpc/server";
 import SignInClient from "./SignInClient";
 import { auth } from "i/server/auth";
 import type { Session } from "next-auth";

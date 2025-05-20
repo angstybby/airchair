@@ -1,7 +1,5 @@
 "use client";
 import Link from "next/link";
-import { auth } from "i/server/auth";
-import { HydrateClient } from "i/trpc/server";
 import { api } from "src/trpc/react";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
