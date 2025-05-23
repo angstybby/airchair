@@ -63,6 +63,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+    workspaces    Workspace[]
 }
 
 model VerificationToken {
@@ -71,4 +72,12 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Workspace {
+    id          String      @id @default(cuid())
+    name        String
+    userId      String
+    user        User        @relation(fields: [userId], references: [id])
+    createdAt   DateTime    @default(now())
 }

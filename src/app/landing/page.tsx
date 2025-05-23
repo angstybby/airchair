@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { auth } from "i/server/auth";
 import Sidebar from "../_components/sidebar";
 import WorkspaceCard from "../_components/workspaceCard";
+import { getUserWorkspaces } from "i/lib/workspaces";
 
 export default async function LandingPage() {
   const session = await auth();
@@ -10,12 +11,8 @@ export default async function LandingPage() {
   if (!session?.user) {
     redirect("/");
   }
-  //  temp for ui purposes
-  const workspaces = [
-    {id: "1", name: "workspace 1" },
-    {id: "2", name: "workspace 2" },
-    {id: "3", name: "workspace 3" },
-  ]
+
+  const workspaces = await getUserWorkspaces(session.user.id);
 
   return (
     <div className="relative flex min-h-screen">

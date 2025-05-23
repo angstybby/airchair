@@ -2,6 +2,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import EmailProvider from "next-auth/providers/email";
+import { CustomPrismaAdapter } from "i/lib/custom-prisma-adapter";
 
 import { db } from "i/server/db";
 
@@ -42,7 +43,7 @@ export const authConfig = {
       from: process.env.EMAIL_FROM,
     })
   ],
-  adapter: PrismaAdapter(db),
+  adapter: CustomPrismaAdapter(db),
   callbacks: {
     session: ({ session, user }) => ({
       ...session,
