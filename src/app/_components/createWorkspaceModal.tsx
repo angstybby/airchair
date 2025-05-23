@@ -9,6 +9,10 @@ export default function CreateWorkspacePage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  type CreateWorkspaceResponse = {
+    id: string;
+  };
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -19,8 +23,8 @@ export default function CreateWorkspacePage() {
     });
 
     if (res.ok) {
-      const { id } = await res.json();
-      router.push(`/workspaces/${id}`);
+      const data: CreateWorkspaceResponse = await res.json(); 
+      router.push(`/workspaces/${data.id}`);
     } else {
       alert("Failed to create workspace");
     }
