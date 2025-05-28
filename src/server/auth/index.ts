@@ -1,4 +1,3 @@
-// src/server/auth/index.ts
 import { cookies } from "next/headers";
 import { verifyJwt } from "i/lib/jwt";
 
@@ -15,6 +14,7 @@ export async function auth() {
       return null;
     }
     // console.log("Decoded JWT payload:", decoded); 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     return { userId: decoded.id }; 
   } catch (error) {
     console.error("Invalid JWT:", error);

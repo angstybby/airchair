@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
-import { NextResponse } from "next/server";
+import type { NextResponse } from "next/server";
 
-const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
+const JWT_SECRET = process.env.JWT_SECRET ?? "supersecret";
 
 export function signJwt(payload: object) {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });

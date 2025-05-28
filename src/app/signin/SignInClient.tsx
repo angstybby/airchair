@@ -20,13 +20,15 @@ export default function SignInClient() {
     });
   
     if (res.ok) {
-      console.log("logged in")
+      console.log("logged in");
       router.push("/landing");
     } else {
-      const data = await res.json();
-      setError(data.error || "Email or password invalid");
+      type ErrorResponse = { error?: string };
+      const data = (await res.json()) as ErrorResponse;
+      setError(data.error ?? "Email or password invalid");
     }
   };
+  
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">

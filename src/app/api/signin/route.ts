@@ -3,16 +3,27 @@ import { db } from "i/server/db";
 import bcrypt from "bcrypt";
 import { signJwt } from "i/lib/jwt";
 
-export async function POST(req: Request) {
-  const { email, password } = await req.json();
+interface SignInRequestBody {
+  email: string;
+  password: string;
+}
 
-  const user = await db.user.findUnique({ where: { email } });
-  if (!user || !(await bcrypt.compare(password, user.password))) {
+export async function POST(req: Request) {
+  const body = (await req.json()) as Partial<SignInRequestBody>;
+
+  if (
+    !body.email || typeof body.email !== "string" ||
+    !body.password || typeof body.password !== "string"
+  ) {
+    return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+  }
+
+  const user = await db.user.findUnique({ where: { email: body.email } });
+  if (!user || !(await bcrypt.compare(body.password, user.password))) {
     return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
   }
 
   const token = signJwt({ id: user.id, email: user.email, name: user.name });
-
 
   const res = NextResponse.json({ success: true });
   res.cookies.set("token", token, {
