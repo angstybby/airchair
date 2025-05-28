@@ -12,18 +12,21 @@ export default function CreateWorkspacePage() {
   type CreateWorkspaceResponse = {
     id: string;
   };
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     const res = await fetch("/api/workspace", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ name }),
     });
 
     if (res.ok) {
-      const data: CreateWorkspaceResponse = await res.json(); 
+      const data = (await res.json()) as CreateWorkspaceResponse; 
       router.push(`/workspaces/${data.id}`);
     } else {
       alert("Failed to create workspace");
