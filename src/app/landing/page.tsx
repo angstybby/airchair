@@ -1,25 +1,34 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "i/server/auth";
 import Sidebar from "../_components/sidebar";
 import WorkspaceCard from "../_components/workspaceCard";
 import { getUserWorkspaces } from "i/lib/workspaces";
 import CreateWorkspaceModal from "../_components/createWorkspaceModal";
+import { db } from "i/server/db";
+import SignOutButton from "../_components/signOutButton";
 
 export default async function LandingPage() {
   const session = await auth();
 
-  if (!session?.user) {
+  if (!session || typeof session !== "object" || !("userId" in session)) {
+    redirect("/signin");
+  }
+
+  const user = await db.user.findUnique({
+    where: { id: session.userId as string },
+  });
+
+  if (!user) {
     redirect("/");
   }
 
-  const workspaces = await getUserWorkspaces(session.user.id);
+  const workspaces = await getUserWorkspaces(user.id);
 
   return (
     <div className="relative flex min-h-screen">
       <Sidebar/>
       <main  className="flex-1 p-6">
-        <h1>Welcome {session.user?.name}</h1>
+        <h1>Welcome {user.name}</h1>
         <h1 className="text-2xl font-bold mb-8">Home</h1>
         <div className="mb-4">
           <CreateWorkspaceModal />
@@ -38,12 +47,7 @@ export default async function LandingPage() {
           + New Workspace
         </Link> */}
 
-        <Link
-          href="/api/auth/signout"
-          className="absolute right-6 top-6 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
-        >
-          Sign out
-        </Link>
+        <SignOutButton/>
       </main>
     </div>
   )

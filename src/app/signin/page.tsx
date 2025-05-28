@@ -1,9 +1,19 @@
+import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
 import SignInClient from "./SignInClient";
-import { auth } from "i/server/auth";
-import type { Session } from "next-auth";
+import { redirect } from "next/navigation";
 
 export default async function SignInPage() {
-  const session: Session | null = await auth();
+  const token = (await cookies()).get("token")?.value;
 
-  return <SignInClient session={session}/>;
+  if (token) {
+    try {
+      jwt.verify(token, process.env.JWT_SECRET!);
+      redirect("/landing");
+    } catch {
+      // Do nothing; continue to render sign in form
+    }
+  }
+
+  return <SignInClient />;
 }

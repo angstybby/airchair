@@ -6,11 +6,9 @@ export default async function Home() {
   const session = await auth();
 
 
-  if (session?.user) {
+  if (session?.userId) {
     redirect("/landing");
   }
 
-  return (
-    <SignIn/>
-  );
+  return <SignIn/>;
 }

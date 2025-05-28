@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
   const session = await auth();
-  if (!session?.user) {
+  if (!session || !session.userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
   const workspace = await prisma.workspace.create({
     data: {
       name,
-      userId: session.user.id,
+      userId: session.userId,
     }
   });
 
