@@ -21,7 +21,8 @@ export const postRouter = createTRPCRouter({
       return ctx.db.post.create({
         data: {
           name: input.name,
-          createdBy: { connect: { id: ctx.session.user.id } },
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          createdBy: { connect: { id: ctx.session.userId } },
         },
       });
     }),
@@ -29,7 +30,8 @@ export const postRouter = createTRPCRouter({
   getLatest: protectedProcedure.query(async ({ ctx }) => {
     const post = await ctx.db.post.findFirst({
       orderBy: { createdAt: "desc" },
-      where: { createdBy: { id: ctx.session.user.id } },
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      where: { createdBy: { id: ctx.session.userId } },
     });
 
     return post ?? null;
