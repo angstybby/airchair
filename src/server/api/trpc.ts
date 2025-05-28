@@ -121,13 +121,14 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
 export const protectedProcedure = t.procedure
   .use(timingMiddleware)
   .use(({ ctx, next }) => {
-    if (!ctx.session?.user) {
+    if (!ctx.session?.userId) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
     return next({
       ctx: {
         // infers the `session` as non-nullable
-        session: { ...ctx.session, user: ctx.session.user },
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        session: { ...ctx.session, user: ctx.session.userId },
       },
     });
   });
